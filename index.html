@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Direct2Stage - Boek artiesten direct</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    /* Basisinstellingen & smooth scroll */
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f6f8;
+      color: #333;
+    }
+
+    /* Sticky Header */
+    header {
+      background: linear-gradient(180deg, #161c2e 0%, #111625 100%);
+      color: #ffffff;
+      padding: 22px 20px 24px 20px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 2px solid #0e78bd;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+    }
+    header img {
+      max-width: 340px;
+      width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto 10px auto;
+      mix-blend-mode: lighten;
+      filter: contrast(1.08) brightness(1.04);
+      -webkit-mask-image: radial-gradient(ellipse 90% 85% at center, black 72%, transparent 98%);
+      mask-image: radial-gradient(ellipse 90% 85% at center, black 72%, transparent 98%);
+    }
+    header p {
+      margin: 0;
+      font-size: 1.08em;
+      letter-spacing: 0.3px;
+      color: #b8d4e8;
+    }
+
+    /* Features sectie (aangepast naar huisstijl lichtblauw) */
+    #features {
+      background-color: #e8f4f8;
+      padding: 50px 20px;
+      text-align: center;
+    }
+    #features h2 {
+      color: #091731;
+      margin-bottom: 35px;
+      font-size: 2em;
+    }
+    .feature-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .feature-item {
+      background-color: #ffffff;
+      padding: 15px 22px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(9, 23, 49, 0.06);
+      font-size: 1.05em;
+      font-weight: 500;
+      color: #0b1d3a;
+    }
+    .feature-item span {
+      color: #20a397;
+      font-weight: bold;
+      margin-right: 10px;
+    }
+
+    /* Algemene Secties */
+    section {
+      padding: 60px 20px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #0b1d3a;
+      font-size: 2em;
+    }
+
+    /* Genre Filter knoppen */
+    .filter-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+    .filter-btn {
+      background-color: #ffffff;
+      color: #091731;
+      border: 2px solid #091731;
+      padding: 8px 18px;
+      border-radius: 25px;
+      font-size: 0.95em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .filter-btn:hover,
+    .filter-btn.active {
+      background-color: #091731;
+      color: #4fd1c5;
+    }
+
+    /* Artiestenkaarten (max 4 per rij op desktop, gelijke hoogte) */
+    .artists {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .artist-card {
+      background-color: #ffffff;
+      border-radius: 15px;
+      padding: 20px;
+      width: 280px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .artist-card.hidden {
+      display: none;
+    }
+    .artist-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.14);
+    }
+    .artist-card .img-wrapper {
+      overflow: hidden;
+      border-radius: 12px;
+      margin-bottom: 14px;
+    }
+    .artist-card img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    .artist-card img:hover {
+      transform: scale(1.05);
+    }
+
+    .artist-card h3 {
+      margin: 4px 0 8px 0;
+      color: #0b1d3a;
+      font-size: 1.3em;
+    }
+    .artist-card p.description {
+      font-size: 0.95em;
+      color: #555;
+      line-height: 1.45;
+      margin: 0 0 20px 0;
+      flex-grow: 1;
+    }
+
+    /* Onderkant kaart: CTA knop & Socials strak uitgelijnd */
+    .card-footer {
+      margin-top: auto;
+    }
+    .cta-btn {
+      display: inline-block;
+      background-color: #091731;
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 0.95em;
+      padding: 10px 22px;
+      border-radius: 25px;
+      transition: background-color 0.25s, color 0.25s;
+    }
+    .cta-btn:hover {
+      background-color: #4fd1c5;
+      color: #091731;
+    }
+
+    /* Social links */
+    .social-links {
+      margin-top: 14px;
+    }
+    .social-links a {
+      margin: 0 8px;
+      color: #0b1d3a;
+      font-size: 1.25em;
+      transition: color 0.3s;
+    }
+    .social-links a:hover {
+      color: #20a397;
+    }
+
+    /* Aanmeld / Contact sectie */
+    #contact {
+      background-color: #e8f4f8;
+      text-align: center;
+      padding: 60px 20px;
+    }
+    #contact p {
+      max-width: 620px;
+      margin: 0 auto 25px auto;
+      font-size: 1.05em;
+      color: #333;
+      line-height: 1.6;
+    }
+    .contact-btn {
+      display: inline-block;
+      background-color: #091731;
+      color: #4fd1c5;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1.05em;
+      padding: 13px 28px;
+      border-radius: 30px;
+      transition: background-color 0.25s, color 0.25s;
+    }
+    .contact-btn:hover {
+      background-color: #4fd1c5;
+      color: #091731;
+    }
+
+    /* Footer */
+    footer {
+      background-color: #091731;
+      color: #ffffff;
+      text-align: center;
+      padding: 25px 20px;
+      font-size: 0.9em;
+    }
+    footer p {
+      margin: 5px 0;
+      color: #a0c4d6;
+    }
+
+    /* Responsive */
+    @media(max-width: 600px){
+      header img {
+        max-width: 260px;
+      }
+      .artists {
+        flex-direction: column;
+        align-items: center;
+      }
+      .feature-list {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="Direct2Stage.jpg" alt="Direct2Stage Logo">
+  <p>Boek artiesten direct, 100% van de gage gaat naar de artiest</p>
+</header>
+
+<section id="features">
+  <h2>Waarom Direct2Stage?</h2>
+  <div class="feature-list">
+    <div class="feature-item"><span>&#10004;</span> Direct contact met de bands</div>
+    <div class="feature-item"><span>&#10004;</span> Alleen talentvolle artiesten</div>
+    <div class="feature-item"><span>&#10004;</span> 100% gage voor de band</div>
+    <div class="feature-item"><span>&#10004;</span> Persoonlijk advies</div>
+  </div>
+</section>
+
+<section id="artists">
+  <h2>Onze Artiesten</h2>
+
+  <!-- Genre Filter -->
+  <div class="filter-buttons">
+    <button class="filter-btn active" data-filter="all">Alle artiesten</button>
+    <button class="filter-btn" data-filter="ska-reggae">Ska &amp; Reggae</button>
+    <button class="filter-btn" data-filter="rock-punk">Rock &amp; Punk</button>
+    <button class="filter-btn" data-filter="feest-tribute">Feest &amp; Tribute</button>
+    <button class="filter-btn" data-filter="jazz-funk">Jazz &amp; Funk</button>
+    <button class="filter-btn" data-filter="dj">DJ / EDM</button>
+  </div>
+
+  <div class="artists">
+
+    <!-- Skankin' Rebels -->
+    <div class="artist-card" data-category="ska-reggae rock-punk">
+      <div class="img-wrapper">
+        <a href="https://www.skankingrebels.nl" target="_blank">
+          <img src="skankinrebels.jpg" alt="Skanking Rebels">
+        </a>
+      </div>
+      <h3>Skankin' Rebels</h3>
+      <p class="description">Energieke ska en reggae vibes die elk podium in beweging krijgen.</p>
+      <div class="card-footer">
+        <a href="mailto:contact@skankinrebels.nl" class="cta-btn">Neem contact op</a>
+        <div class="social-links">
+          <a href="https://www.skankingrebels.nl" target="_blank" title="Website"><i class="fas fa-globe"></i></a>
+          <a href="https://www.instagram.com/skankinrebels/" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.youtube.com/@SkankinRebels" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAC'M -->
+    <div class="artist-card" data-category="rock-punk">
+      <div class="img-wrapper">
+        <a href="https://www.macm.nu" target="_blank">
+          <img src="macm.jpg" alt="MAC'M">
+        </a>
+      </div>
+      <h3>MAC'M</h3>
+      <p class="description">Kids rock band die spelen alsof ze decennia ervaring hebben.</p>
+      <div class="card-footer">
+        <a href="mailto:contact@macm.nl" class="cta-btn">Neem contact op</a>
+        <div class="social-links">
+          <a href="https://www.macm.nu" target="_blank" title="Website"><i class="fas fa-globe"></i></a>
+          <a href="https://www.instagram.com/macm_band" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.youtube.com/@macmband" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Heartshake -->
+    <div class="artist-card" data-category="rock-punk">
+      <div class="img-wrapper">
+        <a href="https://www.heartshake.nl" target="_blank">
+          <img src="heartshake.jpg" alt="Heartshake">
+        </a>
+      </div>
+      <h3>Heartshake</h3>
+      <p class="description">Stevige dosis punk, recht uit het hart.</p>
+      <div class="card-footer">
+        <a href="mailto:contact@heartshake.nl" class="cta-btn">Neem contact op</a>
+        <div class="social-links">
+          <a href="https://www.heartshake.nl" target="_blank" title="Website"><i class="fas fa-globe"></i></a>
+          <a href="https://www.instagram.com/heartshakeband" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.youtube.com/@heartshake" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARAMBA! -->
+    <div class="artist-card" data-category="feest-tribute">
+      <div class="img-wrapper">
+        <a href="https://www.carambasamba.nl/" target="_blank">
+          <img src="Caramba.jpg" alt="Caramba!">
+        </a>
+      </div>
+      <h3>CARAMBA!</h3>
+      <p class="description">Een swingende sambaband dat van ieder evenement een feestje maakt.</p>
+      <div class="card-footer">
+        <a href="mailto:info@carambasamba.nl" class="cta-btn">Neem contact op</a>
+        <div class="social-links">
+          <a href="https://www.carambasamba.nl/" target="_blank" title="Website"><i class="fas fa-globe"></i></a>
+          <a href="https://www.instagram.com/carambatilburg/" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.facebook.com/caramba.samba.tilburg" target="_blank" title="Facebook"><i class="fab fa-facebook"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Suranga & Benzstur -->
+    <div class="artist-card" data-category="dj">
+      <div class="img-wrapper">
+        <a href="https://www.djsuranga.com" target="_blank">
+          <img src="SurBen.jpg" alt="Suranga & Benzstur">
+        </a>
+      </div>
+      <h3>Suranga &amp; Benzstur</h3>
+      <p class="description">EDM DJ-set, stilstaan is verboden.</p>
+      <div class="card-footer">
+        <a href="mailto:djsurangamusic@gmail.com" class="cta-btn">Neem contact op</a>
+        <div class="social-links">
+          <a href="https://djsuranga.com/" target="_blank" title="Website"><i class="fas fa-globe"></i></a>
+          <a href="https://www.instagram.com/suranga.benzstur/" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="https://soundcloud.com/djsuranga" target="_blank" title="SoundCloud"><i class="fab fa-soundcloud"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- RATTATA! -->
+    <div class="artist-card" data-category="feest-tribute">
+      <div class="img-wrapper">
+        <a href="https://www.rattata.nl" target="_blank">
+          <img src="RATTATA.jpg" alt="RATTATA!">
+        </a>
+      </div>
+      <h3>RATTATA!</h3>
+      <p class="description">Doe Maar Experience</p>
+      <div class="card-footer">
+        <a href="mailto:rattata.tribute@gmail.com" class="cta-btn">Neem contact op</a>
+        <div class="social-links">
+          <a href="https://www.rattata.nl" target="_blank" title="Website"><i class="fas fa-globe"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- SKIPPABEAT -->
+    <div class="artist-card" data-category="ska-reggae rock-punk">
+      <div class="img-wrapper">
+        <a href="https://www.skippabeat.nl" target="_blank">
+          <img src="skippabeat.jpg" alt="SKIPPABEAT">
+        </a>
+      </div>
+      <h3>SKIPPABEAT</h3>
+      <p class="description">Rocksteady Reggae Punk Whatever Ska</p>
+      <div class="card-footer">
+        <a href="mailto:skippabeatnl@gmail.com" class="cta-btn">Neem contact op</a>
+        <div class="social-links">
+          <a href="https://www.skippabeat.nl" target="_blank" title="Website"><i class="fas fa-globe"></i></a>
+          <a href="https://www.instagram.com/skippabeatnl/" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.facebook.com/skippabeatNL" target="_blank" title="Facebook"><i class="fab fa-facebook"></i></a>
+          <a href="https://www.youtube.com/@skippabeat6134" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Jazz80 -->
+    <div class="artist-card" data-category="jazz-funk">
+      <div class="img-wrapper">
+        <a href="https://www.instagram.com/jazz80_band/" target="_blank">
+          <img src="jazz80.jpg" alt="Jazz80">
+        </a>
+      </div>
+      <h3>Jazz80</h3>
+      <p class="description">The jazziest funkband or the funkiest jazzband in the 076 area</p>
+      <div class="card-footer">
+        <a href="mailto:dieleman.bas@gmail.com" class="cta-btn">Neem contact op</a>
+        <div class="social-links">
+          <a href="https://www.instagram.com/jazz80_band/" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="contact">
+  <h2>Jouw band op Direct2Stage?</h2>
+  <p>Speel je in een talentvolle band of ben je DJ en wil je direct geboekt worden zonder tussenkomst van dure boekingskantoren? Neem contact met ons op of vraag vrijblijvend advies voor jouw evenement.</p>
+  <a href="mailto:info@direct2stage.nl" class="contact-btn"><i class="fas fa-envelope"></i> Stuur een bericht</a>
+</section>
+
+<footer>
+  <p>&copy; 2026 Direct2Stage. Alle rechten voorbehouden.</p>
+</footer>
+
+<script>
+  const filterButtons = document.querySelectorAll('.filter-btn');
+  const artistCards = document.querySelectorAll('.artist-card');
+
+  filterButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      filterButtons.forEach(btn => btn.classList.remove('active'));
+      button.classList.add('active');
+
+      const filterValue = button.getAttribute('data-filter');
+
+      artistCards.forEach(card => {
+        const categories = card.getAttribute('data-category').split(' ');
+        if (filterValue === 'all' || categories.includes(filterValue)) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    });
+  });
+</script>
+
+</body>
+</html>

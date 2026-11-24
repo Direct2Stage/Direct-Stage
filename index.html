@@ -147,9 +147,23 @@
       box-shadow: 0 12px 24px rgba(0,0,0,0.14);
     }
     .artist-card .img-wrapper {
+      position: relative;
       overflow: hidden;
       border-radius: 12px;
       margin-bottom: 14px;
+      background-color: #111625;
+    }
+    .artist-card .img-wrapper::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(14, 120, 189, 0.14) 0%, rgba(17, 22, 37, 0.32) 100%);
+      box-shadow: inset 0 0 24px rgba(17, 22, 37, 0.45);
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .artist-card:hover .img-wrapper::after {
+      opacity: 0.35;
     }
     .artist-card img {
       width: 100%;
@@ -158,10 +172,12 @@
       object-position: center;
       display: block;
       cursor: pointer;
-      transition: transform 0.3s;
+      filter: contrast(1.06) saturate(0.88) brightness(0.96);
+      transition: transform 0.35s ease, filter 0.35s ease;
     }
-    .artist-card img:hover {
+    .artist-card:hover img {
       transform: scale(1.05);
+      filter: contrast(1.08) saturate(1.04) brightness(1.02);
     }
 
     .artist-card h3 {
